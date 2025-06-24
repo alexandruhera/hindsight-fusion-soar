@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "forensic_results": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "forensic_results",
+      "description": "Flat array of file paths pointing to forensic result files."
+    },
+    "forensic_analysis_path": {
+      "type": "string",
+      "format": "localFilePath",
+      "title": "forensic_analysis_path",
+      "description": "Path where forensic results are stored and the final ZIP file is created."
+    },
+    "system_hostname": {
+      "type": "string",
+      "title": "system_hostname",
+      "description": "Hostname of the system where the forensic analysis is performed."
+    },
+    "analysis_timestamp": {
+      "type": "string",
+      "title": "analysis_timestamp",
+      "description": "Timestamp indicating when the forensic analysis was executed."
+    },
+    "selected_browser": {
+      "type": "string",
+      "title": "selected_browser",
+      "description": "The browser targeted for forensic analysis."
+    }
+  },
+  "required": ["forensic_results", "forensic_analysis_path", "system_hostname", "analysis_timestamp", "selected_browser"]
+}
