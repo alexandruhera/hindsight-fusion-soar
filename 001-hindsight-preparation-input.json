@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "forensic_analysis_path": {
+      "type": "string",
+      "format": "localFilePath",
+      "title": "forensic_analysis_path",
+      "description": "Path where the hindsight binary is put and executed from. This is also where we store the resulting collection files."
+    }
+  }
+}
