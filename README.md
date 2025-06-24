@@ -34,10 +34,10 @@ Designed for DFIR specialists, SOC engineers, and detection responders.
 +-------------+----------+
               |
          +----+----+
-         | Success |---------------------------------+
-         v                                           |
-+-------------------+      +---------------------+   |
-| Upload hindsight  | ---> | Run Hindsight tool  |---+
+         | Success |
+         v
++-------------------+      +---------------------+
+| Upload hindsight  | ---> | Run Hindsight tool  |
 +-------------------+      | - Check errors      |
                            +----------+----------+
                                       |
