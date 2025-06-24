@@ -116,3 +116,7 @@ Example:
 ![image](https://github.com/user-attachments/assets/517bfd0b-2fbc-47ff-97d1-5814e32ae646)
 
 
+![hind16](https://github.com/user-attachments/assets/20e18ed6-fd69-4de0-ace0-78411486a042)
+![hind15](https://github.com/user-attachments/assets/2930ad99-84bd-4fec-a5b2-2398f3c096a6)
+![hind14](https://github.com/user-attachments/assets/94d1dc94-8961-44e8-bb30-01d4e48f2a62)
+![hind17](https://github.com/user-attachments/assets/92b4e455-aac2-448e-b31f-7235f8ffd3c1)
