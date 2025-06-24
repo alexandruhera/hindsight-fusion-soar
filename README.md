@@ -4,62 +4,74 @@ This repository contains an automated, on-demand forensic workflow powered by **
 
 Designed for DFIR specialists, SOC engineers, and detection responders.
 
-┌────────────────────┐
-│ 1. TRIGGER (Manual)│
-└────────┬───────────┘
-         │   ◦ Launches the workflow with three required fields:
-         │     ▪ Sensor ID (`deviceID`)
-         │     ▪ Browser (`selected_browser`)
-         │     ▪ Output format (`output_format`)
-         ▼
-┌───────────────────────────────┐
-│ 2. DEVICE INTELLIGENCE GATHER │
-└────────┬──────────────────────┘
-         │   ◦ Retrieves OS, Hostname, Tags
-         │   ◦ Ensures platform compatibility (`Windows` required)
-         ▼
-┌────────────────────────────────────┐
-│ 3. WORKSPACE & VARIABLE SETUP      │
-└────────┬───────────────────────────┘
-         │   ◦ Establishes working dir on endpoint (`C:\hindsight`)
-         │   ◦ Preps reusable paths using custom workflow variables
-         ▼
-┌────────────────────────────────────┐
-│ 4. PAYLOAD DEPLOYMENT (`hindsight`)│
-└────────┬───────────────────────────┘
-         │   ◦ Pushes executable via RTR
-         │   ◦ Verifies transfer via stdout match: `"Operation completed"`
-         ▼
-┌────────────────────────────────────┐
-│ 5. DATA HARVESTING & TRANSFORM     │
-└────────┬───────────────────────────┘
-         │   ◦ Runs `hindsight-processing.ps1`
-         │   ◦ Targets browser artifacts (based on user choice)
-         │   ◦ Converts data to xlsx/jsonl/sqlite formats
-         │   ◦ Stores results + logs exceptions
-         ▼
-┌──────────────────────────────────────┐
-│ 6. DYNAMIC POLLING & ZIP RETRIEVAL   │
-└────────┬─────────────────────────────┘
-         │   ◦ Controlled loop: up to 15 iterations / 15 minutes
-         │   ◦ Checks if ZIP artifact is ready
-         │     ▪ If error → wait → retry
-         │     ▪ If success → break + store ZIP path in variable
-         ▼
-┌──────────────────────────────────┐
-│ 7. FILE FETCH & CLEANUP          │
-└────────┬─────────────────────────┘
-         │   ◦ RTR fetch of ZIP result (via stored path)
-         │   ◦ Deletes forensic working dir from host
-         ▼
-┌────────────────────────────────────────────┐
-│ 8. SLACK ALERTS & EXECUTION METRICS        │
-└────────────────────────────────────────────┘
-    ◦ Notification Types:
-      ▪ Trigger Summary (who ran it, browser, format)
-      ▪ Exception Alerts (w/ inline script messages)
-      ▪ Completion Message (hostname, sensor ID, file name)
-
++--------------------+
+|  On-Demand Trigger |
+| - deviceID         |
+| - browser          |
+| - output_format    |
++---------+----------+
+          |
+          v
++----------------------+
+| Get Device Details   |
++----------+-----------+
+           |
+           v
++----------------------------+
+| If Platform == Windows     |
++-------------+--------------+
+              |
+              v
++-------------------------------+
+| Create forensic path variable |
++-------------+----------------+
+              |
+              v
++------------------------+
+| Preparation Script     |
+| - Sets path            |
+| - Checks errors        |
++-------------+----------+
+              |
+         +----+----+
+         | Success |---------------------------------+
+         v                                           |
++-------------------+      +---------------------+   |
+| Upload hindsight  | ---> | Run Hindsight tool  |---+
++-------------------+      | - Check errors      |
+                           +----------+----------+
+                                      |
+                       +--------------+--------------+
+                       |          Success            |
+                       v                             v
+        +----------------------------+     +---------------------------+
+        | Send param details to Slack|     | Trigger Result Collection |
+        +----------------------------+     | in Loop (max 15 min)      |
+                                           +-------------+-------------+
+                                                         |
+                              +--------------------------+--------------------------+
+                              |  Run Collection Script   |     If Errors: Retry/Sleep|
+                              +-------------+------------+--------------------------+
+                                            |
+                                            v
+                               +-------------------------+
+                               | Update zip_file_path    |
+                               +-----------+-------------+
+                                           |
+                                           v
+                               +-------------------------+
+                               | Get File from endpoint  |
+                               +-----------+-------------+
+                                           |
+                                           v
+                               +-------------------------+
+                               | Remove temp directory   |
+                               +-----------+-------------+
+                                           |
+                                           v
+                              +--------------------------+
+                              | Send Slack Final Message |
+                              +--------------------------+
 ---
 
 ## ⚙️ Workflow Summary
