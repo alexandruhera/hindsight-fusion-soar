@@ -1,63 +1,97 @@
 # 🕵️‍♂️ Hindsight Forensic Workflow
 
-This repository delivers an automated, on-demand forensic workflow built with **CrowdStrike RTR** and Slack integration. It leverages the open-source tool **Hindsight** to extract, convert, and deliver browser artifacts from Windows endpoints in real time.
+This repository provides a modular, fully automated forensic analysis pipeline designed for use with **CrowdStrike Falcon Real Time Response (RTR)**. It leverages **Hindsight**, an open-source browser artifact parser, to extract, convert, and collect browser history from remote Windows endpoints — with real-time visibility via **Slack alerts**.
 
-Ideal for DFIR practitioners, SOC engineers, and threat responders.
+Ideal for:
+- Digital forensic analysts conducting targeted history captures
+- SOC engineers building adaptive incident response playbooks
+- Threat hunters pivoting off browser-based behavior
 
 ---
 
 ## ⚙️ Workflow Overview
 
-This workflow performs the following:
+This workflow is composed of six tightly integrated phases:
 
-1. **Platform Validation** – Confirms the target device runs Windows OS  
-2. **Tool Delivery** – Deploys `hindsight.exe` to a designated working directory  
-3. **Artifact Extraction** – Runs `hindsight-processing.ps1` to parse Chrome, Edge, or Brave data into `xlsx`, `jsonl`, or `sqlite`  
-4. **Polling Loop** – Waits up to 15 minutes (15 attempts) for output ZIP generation with retry-on-error logic  
-5. **Result Collection** – Fetches the ZIP archive and cleans the temporary directory  
-6. **Slack Reporting** – Sends clear, structured notifications throughout the process  
+1. **Platform Validation**  
+   - Automatically validates that the targeted device is online and running **Windows OS**
+   - Gathers hostname, platform type, and available tags from Falcon API
+
+2. **Tool Deployment**  
+   - Dynamically sets a custom working directory on the remote device (e.g., `C:\hindsight`)  
+   - Securely uploads `hindsight.exe` to that folder via RTR's **Put File**  
+   - Prepares any supporting environment variables or folders
+
+3. **Browser Artifact Extraction**  
+   - Executes a custom PowerShell script (`hindsight-processing.ps1`) on the endpoint  
+   - Extracts browser artifacts (Chrome, Edge, Brave) and converts to the chosen format:  
+     - `.xlsx` for easy analysis  
+     - `.jsonl` for structured parsing  
+     - `.sqlite` for raw queryability  
+   - Captures the browser profile names in use (for context)
+
+4. **Resilient Polling & Collection Loop**  
+   - Starts a **15-minute polling loop** (15 total attempts, 1 min max intervals)  
+   - If extraction succeeds: retrieves a ZIP archive of results  
+   - If a script exception occurs: Slack is notified, and retry logic is activated  
+   - Gracefully exits the loop once data is collected or time runs out
+
+5. **Artifact Retrieval & Cleanup**  
+   - Uses RTR’s **Get File** to fetch the packaged ZIP archive from the remote device  
+   - Deletes the temporary working directory and files used during execution  
+
+6. **Slack Notification System**  
+   - Sends Slack alerts at key stages:
+     - **Run Initiation** – who ran the workflow and what inputs were selected  
+     - **Exception Alerts** – if Hindsight or the preparation step fails  
+     - **Completion Report** – device name, user email, ZIP filename, and success flag
 
 ---
 
 ## 🧠 Why This Design Works
 
-- **Resilient Automation** – Built-in retry logic ensures delivery even with intermittent failures  
-- **Operational Transparency** – Slack alerts for start, exception, and success states  
-- **Variable-Driven Flexibility** – No hardcoded paths; all flow through managed variables  
-- **Composable** – Easily integrates into larger workflows or used independently  
+- **Self-healing reliability** – Built-in conditional checks and looping ensure success even on first-time setup or slow endpoints  
+- **Zero hardcoding** – Paths, formats, and browsers are fully parameterized using workflow variables  
+- **Plug-and-play** – Can be invoked manually or embedded as a module within broader DFIR playbooks  
+- **Operator-aware** – All Slack messages include runner identity and device metadata  
 
 ---
 
 ## ✅ Prerequisites
 
-- Active CrowdStrike Real Time Response (RTR) access  
-- Slack webhook credentials  
-- Access to the `hindsight.exe` binary  
+Make sure the following are set up prior to execution:
+
+- CrowdStrike Falcon RTR access (with file upload & script execution permissions)  
+- A Slack App with a webhook URL and appropriate channel permissions  
+- Local copy of `hindsight.exe` (from [obsidianforensics](https://github.com/obsidianforensics/hindsight/releases))  
 
 ---
 
 ## 🔧 Trigger Parameters
 
-| Parameter           | Description                                   | Required | Example         |
-|--------------------|-----------------------------------------------|----------|-----------------|
-| `deviceID`         | 32-character CrowdStrike Sensor ID            | ✅       | A1B2C3D4...     |
-| `selected_browser` | Browser to analyze (`Chrome`, `Edge`, `Brave`) | ✅       | Google Chrome   |
-| `output_format`    | Output type (`xlsx`, `jsonl`, `sqlite`)       | ✅       | xlsx            |
+These inputs define the scope and output of each run:
+
+| Parameter           | Description                                       | Required | Example         |
+|--------------------|---------------------------------------------------|----------|-----------------|
+| `deviceID`         | 32-character CrowdStrike Sensor ID                | ✅       | A1B2C3D4E5F6... |
+| `selected_browser` | Target browser (`Google Chrome`, `Microsoft Edge`, `Brave`) | ✅ | Google Chrome   |
+| `output_format`    | Output format (`xlsx`, `jsonl`, `sqlite`)         | ✅       | xlsx            |
 
 ---
 
 ## 📬 Slack Integration
 
-Slack notifications provide three distinct insights:
-- **Trigger Summary** – Initiator and parameters used  
-- **Error Reporting** – If any exceptions are thrown  
-- **Completion Notice** – Includes ZIP filename and host details  
+Slack updates are sent via webhook and include:
+
+- 📥 **Trigger Summary** – Who initiated the workflow and selected parameters  
+- ⚠️ **Error Notices** – Clearly formatted exception output from PowerShell scripts  
+- ✅ **Completion Report** – Includes device hostname, ZIP filename, and sensor tags  
 
 ---
 
 ## ✨ Contributors
 
-Crafted with care by [@Alexandru Hera](https://www.linkedin.com/in/alexandruhera), bringing precision, speed, and elegance to forensic automation — designed for deep CrowdStrike integration.
+Crafted by [@Alexandru Hera](https://www.linkedin.com/in/alexandruhera), with a passion for delivering fast, auditable forensic tooling that integrates tightly with the CrowdStrike ecosystem.
 
 ---
 
@@ -65,3 +99,5 @@ Crafted with care by [@Alexandru Hera](https://www.linkedin.com/in/alexandruhera
 
 - [CrowdStrike Falcon RTR](https://www.crowdstrike.com)  
 - [Hindsight by obsidianforensics](https://github.com/obsidianforensics/hindsight)
+
+---
