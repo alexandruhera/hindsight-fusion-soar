@@ -4,74 +4,80 @@ This repository contains an automated, on-demand forensic workflow powered by **
 
 Designed for DFIR specialists, SOC engineers, and detection responders.
 
-+--------------------+
-|  On-Demand Trigger |
-| - deviceID         |
-| - browser          |
-| - output_format    |
-+---------+----------+
-          |
-          v
++----------------------+
+|  On-Demand Trigger   |
+| - deviceID           |
+| - browser            |
+| - output_format      |
++----------+-----------+
+           |
+           v
 +----------------------+
 | Get Device Details   |
 +----------+-----------+
            |
            v
-+----------------------------+
-| If Platform == Windows     |
-+-------------+--------------+
-              |
-              v
++------------------------------+
+| Check: Platform == Windows? |
++--------------+--------------+
+               |
+               v
++------------------------------+
+| Create forensic path var     |
++--------------+---------------+
+               |
+               v
++------------------------------+
+| Preparation Script           |
+| - Set path                   |
+| - Check for errors           |
++--------------+---------------+
+               |
+       +-------+--------+
+       |     Success     |
+       v                 |
++------------------+     |
+| Put hindsight.exe |     |
++--------+---------+     |
+         |               |
+         v               |
++------------------------+  
+| Run Hindsight Tool     |
+| - Use selected browser |
+| - Check for errors     |
++-----------+------------+
+            |
+   +--------+--------+
+   |     Success     |
+   v                 |
++-----------------------------+
+| Send param summary to Slack|
++-----------------------------+
+            |
+            v
 +-------------------------------+
-| Create forensic path variable |
-+-------------+----------------+
-              |
-              v
-+------------------------+
-| Preparation Script     |
-| - Sets path            |
-| - Checks errors        |
-+-------------+----------+
-              |
-         +----+----+
-         | Success |
-         v
-+-------------------+      +---------------------+
-| Upload hindsight  | ---> | Run Hindsight tool  |
-+-------------------+      | - Check errors      |
-                           +----------+----------+
-                                      |
-                       +--------------+--------------+
-                       |          Success            |
-                       v                             v
-        +----------------------------+     +---------------------------+
-        | Send param details to Slack|     | Trigger Result Collection |
-        +----------------------------+     | in Loop (max 15 min)      |
-                                           +-------------+-------------+
-                                                         |
-                              +--------------------------+--------------------------+
-                              |  Run Collection Script   |     If Errors: Retry/Sleep|
-                              +-------------+------------+--------------------------+
-                                            |
-                                            v
-                               +-------------------------+
-                               | Update zip_file_path    |
-                               +-----------+-------------+
-                                           |
-                                           v
-                               +-------------------------+
-                               | Get File from endpoint  |
-                               +-----------+-------------+
-                                           |
-                                           v
-                               +-------------------------+
-                               | Remove temp directory   |
-                               +-----------+-------------+
-                                           |
-                                           v
-                              +--------------------------+
-                              | Send Slack Final Message |
-                              +--------------------------+
+| Result Collection Loop (15x) |
++-------------------------------+
+            |
+    +-------+---------+
+    | Run Collection  |
+    +-----------------+
+            |
+    +-------+---------+
+    | Update zip path |
+    +-------+---------+
+            |
+    +-------v---------+
+    | Get output file |
+    +-------+---------+
+            |
+    +-------v---------+
+    | Clean up folder |
+    +-------+---------+
+            |
+    +-------v---------+
+    | Final Slack msg |
+    +-----------------+
 ---
 
 ## ⚙️ Workflow Summary
