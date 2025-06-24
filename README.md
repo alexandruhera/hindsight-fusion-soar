@@ -1,64 +1,67 @@
 # 🕵️‍♂️ Hindsight Forensic Workflow
 
-This repository contains an automated, on-demand forensic workflow powered by **CrowdStrike RTR** and Slack integration. It leverages the open-source tool **Hindsight** to extract, convert, and retrieve browser artifacts from endpoints in real time.
+This repository delivers an automated, on-demand forensic workflow built with **CrowdStrike RTR** and Slack integration. It leverages the open-source tool **Hindsight** to extract, convert, and deliver browser artifacts from Windows endpoints in real time.
 
-Designed for DFIR specialists, SOC engineers, and detection responders.
-
-## ⚙️ Workflow Summary
-
-This workflow performs:
-
-1. **Device Validation**: Ensures the target endpoint is Windows-based.
-2. **Tool Deployment**: Pushes `hindsight.exe` to a secure working directory on the device.
-3. **Browser Artifact Extraction**: Uses `hindsight-processing.ps1` to parse Chrome, Edge, or Brave data into your desired format: `xlsx`, `jsonl`, or `sqlite`.
-4. **Resilient Polling Loop**: Waits up to 15 minutes (15 tries) for ZIP file creation, with error-triggered retry logic.
-5. **Artifact Retrieval**: Grabs the final ZIP result and clears temp directories.
-6. **Slack Notifications**: Provides actionable updates at every major step.
+Ideal for DFIR practitioners, SOC engineers, and threat responders.
 
 ---
 
-## 🧠 Why It’s Built This Way
+## ⚙️ Workflow Overview
 
-- **Self-healing logic**: Polling loop with retry backoff ensures end-to-end artifact delivery.
-- **External observability**: Slack alerts (trigger, exception, completion) make every run transparent.
-- **Dynamic + portable**: Uses workflow variables for pathing, no hardcoded values.
-- **Modular**: Designed to drop into broader playbooks, or stand alone.
+This workflow performs the following:
+
+1. **Platform Validation** – Confirms the target device runs Windows OS  
+2. **Tool Delivery** – Deploys `hindsight.exe` to a designated working directory  
+3. **Artifact Extraction** – Runs `hindsight-processing.ps1` to parse Chrome, Edge, or Brave data into `xlsx`, `jsonl`, or `sqlite`  
+4. **Polling Loop** – Waits up to 15 minutes (15 attempts) for output ZIP generation with retry-on-error logic  
+5. **Result Collection** – Fetches the ZIP archive and cleans the temporary directory  
+6. **Slack Reporting** – Sends clear, structured notifications throughout the process  
 
 ---
 
-## ✅ Requirements
+## 🧠 Why This Design Works
 
-- Active CrowdStrike RTR access
-- Slack webhook credentials
-- `hindsight.exe` binary
+- **Resilient Automation** – Built-in retry logic ensures delivery even with intermittent failures  
+- **Operational Transparency** – Slack alerts for start, exception, and success states  
+- **Variable-Driven Flexibility** – No hardcoded paths; all flow through managed variables  
+- **Composable** – Easily integrates into larger workflows or used independently  
+
+---
+
+## ✅ Prerequisites
+
+- Active CrowdStrike Real Time Response (RTR) access  
+- Slack webhook credentials  
+- Access to the `hindsight.exe` binary  
 
 ---
 
 ## 🔧 Trigger Parameters
 
-| Parameter         | Description                                | Required | Example                |
-|------------------|--------------------------------------------|----------|------------------------|
-| `deviceID`        | 32-char Sensor ID                          | ✅        | A1B2C3D4...            |
-| `selected_browser`| Browser to analyze (`Chrome`, `Edge`, `Brave`) | ✅    | `Google Chrome`        |
-| `output_format`   | Export format (`xlsx`, `jsonl`, `sqlite`) | ✅        | `xlsx`                 |
+| Parameter           | Description                                   | Required | Example         |
+|--------------------|-----------------------------------------------|----------|-----------------|
+| `deviceID`         | 32-character CrowdStrike Sensor ID            | ✅       | A1B2C3D4...     |
+| `selected_browser` | Browser to analyze (`Chrome`, `Edge`, `Brave`) | ✅       | Google Chrome   |
+| `output_format`    | Output type (`xlsx`, `jsonl`, `sqlite`)       | ✅       | xlsx            |
 
 ---
 
-## 📬 Slack Notifications
+## 📬 Slack Integration
 
-Three types of alerts are sent via Slack:
-- **Trigger Summary**: Who ran it and with what inputs
-- **Failure Warnings**: If any script raises exceptions
-- **Completion Report**: Includes hostname, ZIP filename, and metadata
+Slack notifications provide three distinct insights:
+- **Trigger Summary** – Initiator and parameters used  
+- **Error Reporting** – If any exceptions are thrown  
+- **Completion Notice** – Includes ZIP filename and host details  
+
 ---
 
 ## ✨ Contributors
 
-Brought to you by [@Alexandru](#) and built to make forensic automation beautiful, scalable, and CrowdStrike-native.
+Crafted with care by [@Alexandru Hera](https://www.linkedin.com/in/alexandruhera), bringing precision, speed, and elegance to forensic automation — designed for deep CrowdStrike integration.
 
 ---
 
-## 🛠️ Inspired By
+## 🛠️ Acknowledgements
 
-- [CrowdStrike Falcon Real Time Response](https://www.crowdstrike.com)
+- [CrowdStrike Falcon RTR](https://www.crowdstrike.com)  
 - [Hindsight by obsidianforensics](https://github.com/obsidianforensics/hindsight)
