@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "has_processing_errors": {
+      "type": "boolean",
+      "title": "has_processing_errors",
+      "description": "Indicates whether any errors occurred during execution."
+    },
+    "exception_messages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "exception_messages",
+      "description": "List of error messages captured during execution."
+    },
+    "user_data_path": {
+      "type": "string",
+      "title": "user_data_path",
+      "description": "Resolved user data path for the selected browser."
+    },
+    "browser_profile_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "browser_profile_names",
+      "description": "List of detected browser profile names."
+    },
+    "browser_profile_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "browser_profile_paths",
+      "description": "List of detected browser profile paths."
+    },
+    "forensic_results": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "forensic_results",
+      "description": "Paths to the generated forensic analysis result files."
+    },
+    "analysis_timestamp": {
+      "type": "string",
+      "title": "analysis_timestamp",
+      "description": "Timestamp of the forensic analysis execution."
+    }
+  },
+  "required": ["has_processing_errors"]
+}
