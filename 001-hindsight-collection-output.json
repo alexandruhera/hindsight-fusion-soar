@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "has_processing_errors": {
+      "type": "boolean",
+      "title": "has_processing_errors",
+      "description": "Indicates whether any errors occurred during execution.",
+	  "enum": [true, false]
+    },
+    "exception_messages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "exception_messages",
+      "description": "List of error messages captured during execution."
+    },
+    "zip_file_path": {
+      "type": "string",
+      "format": "localFilePath",
+      "title": "zip_file_path",
+      "description": "Path to the generated ZIP archive containing forensic results."
+    }
+  },
+  "required": ["has_processing_errors"]
+}
