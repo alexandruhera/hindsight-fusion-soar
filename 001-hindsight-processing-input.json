@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "forensic_analysis_path": {
+      "type": "string",
+      "format": "localFilePath",
+      "title": "forensic_analysis_path",
+      "description": "Path where the hindsight binary is put and executed from. This is also where we store the resulting collection files."
+    },
+    "forensic_tool_path": {
+      "type": "string",
+      "format": "localFilePath",
+      "title": "forensic_tool_path",
+      "description": "Path to the forensic tool used in the analysis."
+    },
+    "output_format": {
+      "type": "string",
+      "title": "output_format",
+      "description": "Desired output format for the forensic analysis results."
+    },
+    "selected_browser": {
+      "type": "string",
+      "title": "selected_browser",
+      "description": "Target browser for forensic analysis."
+    },
+    "system_hostname": {
+      "type": "string",
+      "title": "system_hostname",
+      "description": "Hostname of the system on which the analysis is performed."
+    }
+  },
+  "required": ["forensic_analysis_path", "forensic_tool_path", "output_format", "selected_browser", "system_hostname"]
+}
