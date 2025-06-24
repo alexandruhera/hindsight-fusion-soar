@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "has_processing_errors": {
+      "type": "boolean",
+      "title": "has_processing_errors",
+      "description": "Indicates whether any errors occurred during execution."
+    },
+    "exception_messages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "exception_messages",
+      "description": "List of error messages captured during execution."
+    },
+    "forensic_analysis_path": {
+      "type": "string",
+      "format": "localFilePath",
+      "title": "forensic_analysis_path",
+      "description": "Path where the hindsight binary is put and executed from. This is also where we store the resulting collection files."
+    }
+  },
+  "required": ["has_processing_errors"]
+}
