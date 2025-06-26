@@ -75,7 +75,7 @@ These inputs define the scope and output of each run:
 
 | Parameter           | Description                                       | Required | Example         |
 |--------------------|---------------------------------------------------|----------|-----------------|
-| `deviceID`         | 32-character CrowdStrike Sensor ID                | ✅       | A1B2C3D4E5F6... |
+| `deviceID`         | CrowdStrike Sensor ID                | ✅       | A1B2C3D4E5F6... |
 | `selected_browser` | Target browser (`Google Chrome`, `Microsoft Edge`, `Brave`) | ✅ | Google Chrome   |
 | `output_format`    | Output format (`xlsx`, `jsonl`, `sqlite`)         | ✅       | xlsx            |
 
